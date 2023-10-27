@@ -27,7 +27,7 @@ For instance, one edit is: "A Holstein is a kind of dog". And one test is: "A so
 ## Creating the dataset
 
 ```
-python3 
+python3 build-datasets.py
 ```
 
 ### requirements:
