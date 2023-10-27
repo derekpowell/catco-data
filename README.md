@@ -19,13 +19,25 @@ For instance, one edit is: "A Holstein is a kind of dog". And one test is: "A so
 
 Just run:
 
-```
+```bash
 python3 build-datasets.py
+```
+
+## Loading the data
+
+The `fwd_choices` and `rev_choices` columns are lists, so to read them properly from a `.csv` requires an extra step.
+
+```python
+from ast import literal_eval
+
+baseline_df = pd.read_csv("baseline-evaluation.csv", converters={'fwd_choices':literal_eval, 'rev_choices':literal_eval})
 ```
 
 ## Test query structure
 
-The benchmark is multiple-choice with 2-4 choices for all queries. In light of the directionality of causal language models (predicting left to right), the dataset distinguishes between "forward" and "reverse" queries. A "forward" query is one where the edited subject is in the question prompt and an answer must be chosen. A "reverse" query is one where the edited subject is the anwer itself.
+The benchmark is multiple-choice with 2-4 choices for all queries. Random guessing would produce about 30% accuracy. 
+
+In light of the directionality of causal language models (predicting left to right), the dataset distinguishes between "forward" and "reverse" queries. A "forward" query is one where the edited subject is in the question prompt and an answer must be chosen. A "reverse" query is one where the edited subject is the anwer itself.
 
 - **Forward**: "A sound a Holstein makes is [bark / moo / tweet / hiss]"
 - **Reverse**: "Bark is a sound made by a [Holstein / Labrador / Siamese / Owlet]"
