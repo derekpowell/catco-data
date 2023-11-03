@@ -113,8 +113,11 @@ if __name__ == '__main__':
         )
         .assign(
             fwd_choices = lambda d: d.apply(lambda x: [x.entity_type] + [t for t in types_df.entity_type.to_list() if t != x.entity_type], 1),
-            rev_choices = lambda d: d.apply(lambda x: [x.subj] + [t for t in d.loc[d.entity_type != x.entity_type].subj.to_list()], 1)
+            rev_choices = lambda d: d.apply(lambda x: [x.subj] + [t for t in d.loc[d.entity_type != x.entity_type].subj.to_list()], 1),
+            answer_fwd = lambda x: x.entity_type,
+            answer_rev = lambda x: x.subj
         )
+        .rename(columns = {'entity_type':'entity'})
     )
 
     
@@ -125,6 +128,11 @@ if __name__ == '__main__':
         .assign(rev_choices = lambda d: d.apply(lambda x: longtypes_df.loc[longtypes_df.subj.isin(x.rev_choices)].entity_type.to_list(), 1)) #longtypes_df.loc[longtypes_df.subj.isin(x.rev_choices)].entity_type)
         .drop_duplicates(subset = ["entity", "property"])
         .assign(token_type = "entity")
+        .assign(
+            # answer_fwd = lambda x: x.entity,
+            answer_rev = lambda x: x.subj
+        )
+        .rename(columns = {'entity_type':'entity'})
     )
 
     baseline_df = pd.concat([baseline_cat_members, baseline_category_property_df, baseline_df])
